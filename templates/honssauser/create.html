@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        <script src="http://code.jquery.com/jquery-1.12.4.min.js" ></script>
+        <script src="http://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+        <script>
+        (function() {
+            var IMP = window.IMP;
+            var code = "iamport";  // FIXME: 가맹점 식별코드
+            IMP.init(code);
+
+            // 결제요청
+            IMP.request_pay({
+                // name과 amount만 있어도 결제 진행가능
+                pg : 'html5_inicis', // pg 사 선택
+                pay_method : 'card',
+                merchant_uid : 'merchant_' + new Date().getTime(),
+                name : '(주) 혼싸',
+                amount : {{ price }},
+                buyer_email : 'iamport@siot.do',
+                buyer_name : '구매자이름',
+                buyer_tel : '010-1234-5678',
+                buyer_addr : '서울시 성동구 왕십리로 303 4층',
+                buyer_postcode : '123-456',
+                m_redirect_url : '../order/'
+            }, function(rsp) {
+                if ( rsp.success ) {
+                    var msg = '(주)혼싸 결제가 완료되었습니다.';
+                    msg += '\n결제 금액 : ' + rsp.paid_amount;
+                    var success = 1
+                }
+                <!--결제 실패시 db연동 x-->
+                else {
+                    var msg = '결제에 실패하였습니다.\n에러내용 : ' + rsp.error_msg
+                }
+                alert(msg);
+                // document.write(<input type='text' value="가나다">);
+                // document.write(msg);
+            });
+        })();
+        document.write('{{ price }}')
+        </script>
+
+    </head>
+    <body>
+    </body>
+</html>
